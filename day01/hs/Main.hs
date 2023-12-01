@@ -22,6 +22,20 @@ digitsOnly (x:xs) = maybeToList (convertLeadingDigit (x:xs)) ++ digitsOnly xs
 
 main = do
   ls <- lines <$> readFile "input"
-  let vals = map digitsOnly ls
+  putStr "Part 1: "
+  print $ solve1 ls
+  putStr "Part 2: "
+  print $ solve2 ls
+
+solve1 :: [String] -> Int
+solve1 ls = sum . map read $ digits
+  where
+    digits = map (filter isDigit) ls
            & map (\xs -> [head xs, last xs])
-  print $ sum . map read $ vals
+
+solve2 :: [String] -> Int
+solve2 ls = sum . map read $ vals
+  where
+    vals = map digitsOnly ls
+         & map (\xs -> [head xs, last xs])
+
