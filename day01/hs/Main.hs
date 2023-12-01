@@ -13,13 +13,12 @@ convertLeadingDigit ('s':'i':'x':_)         = Just '6'
 convertLeadingDigit ('s':'e':'v':'e':'n':_) = Just '7'
 convertLeadingDigit ('e':'i':'g':'h':'t':_) = Just '8'
 convertLeadingDigit ('n':'i':'n':'e':_)     = Just '9'
+convertLeadingDigit (x:_) | isDigit x       = Just x
 convertLeadingDigit _                       = Nothing
 
 digitsOnly :: String -> String
-digitsOnly [] = []
-digitsOnly (x:xs)
-  | isDigit x = x : digitsOnly xs
-  | otherwise = maybeToList (convertLeadingDigit (x:xs)) ++ digitsOnly xs
+digitsOnly []     = []
+digitsOnly (x:xs) = maybeToList (convertLeadingDigit (x:xs)) ++ digitsOnly xs
 
 main = do
   ls <- lines <$> readFile "input"
