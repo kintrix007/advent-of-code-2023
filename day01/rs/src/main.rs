@@ -7,7 +7,7 @@ fn main() {
     println!("Part 2: {}", solve2(&lines));
 }
 
-fn solve1(lines: &Vec<&str>) -> i32 {
+fn solve1<'a>(lines: &'a Vec<&str>) -> i32 {
     lines
         .iter()
         .map(|ln| {
@@ -30,7 +30,7 @@ const NUMBERS: [&str; 9] = [
     "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
 ];
 
-fn solve2(lines: &Vec<&str>) -> i32 {
+fn solve2<'a>(lines: &'a Vec<&str>) -> i32 {
     lines
         .iter()
         .map(|ln| {
