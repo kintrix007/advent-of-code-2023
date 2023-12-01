@@ -17,7 +17,7 @@ with it a bit more.
 
 ## Language Choice Per Day
 
-- Day 01: -
+- Day 01: Haskell
 - Day 02: -
 - Day 03: -
 - Day 04: -
