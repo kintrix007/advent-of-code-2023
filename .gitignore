@@ -1,0 +1,5 @@
+# User environment
+.direnv
+
+# Since AoC asks people not to share their input
+input
