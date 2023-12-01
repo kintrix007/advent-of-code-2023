@@ -11,7 +11,7 @@ fn solve1(lines: &Vec<&str>) -> i32 {
     lines
         .iter()
         .map(|ln| {
-            let mut digits = ln.chars().filter(|x| x.is_numeric()).peekable();
+            let mut digits = ln.chars().filter(|x| x.is_digit(10)).peekable();
             let first = digits.peek().unwrap().clone();
             let last = digits.last().unwrap();
 
@@ -35,7 +35,7 @@ fn solve2(lines: &Vec<&str>) -> i32 {
         .iter()
         .map(|ln| {
             let mut digits = ln.chars().enumerate().filter_map(|(i, c)| {
-                if c.is_numeric() {
+                if c.is_digit(10) {
                     return c.to_digit(10).map(|x| x as i32);
                 }
 
