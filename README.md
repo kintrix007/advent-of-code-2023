@@ -15,6 +15,9 @@ sake of it, I would love to try writing some days in the Nix language. It
 really is not made for this, but it could be a good way to familiarize myself
 with it a bit more.
 
+As an exercise, I will try adding explicit lifetimes everywhere in my Rust
+solutions in hopes of it giving me a more in-depth understanding of them.
+
 ## Language Choice Per Day
 
 - Day 01: Haskell, Rust
