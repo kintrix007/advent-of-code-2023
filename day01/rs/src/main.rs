@@ -11,8 +11,8 @@ fn solve1(lines: &Vec<&str>) -> i32 {
     lines
         .iter()
         .map(|ln| {
-            let digits = ln.chars().filter(|x| x.is_numeric()).collect::<Vec<_>>();
-            let first = digits.first().unwrap();
+            let mut digits = ln.chars().filter(|x| x.is_numeric()).peekable();
+            let first = digits.peek().unwrap().clone();
             let last = digits.last().unwrap();
 
             (first.to_digit(10).unwrap() * 10 + last.to_digit(10).unwrap()) as i32
@@ -34,9 +34,9 @@ fn solve2(lines: &Vec<&str>) -> i32 {
     lines
         .iter()
         .map(|ln| {
-            let digits = ln.chars().enumerate().filter_map(|(i, c)| {
+            let mut digits = ln.chars().enumerate().filter_map(|(i, c)| {
                 if c.is_numeric() {
-                    return c.to_string().parse::<i32>().ok();
+                    return c.to_digit(10).map(|x| x as i32);
                 }
 
                 NUMBERS
@@ -49,9 +49,9 @@ fn solve2(lines: &Vec<&str>) -> i32 {
                 // } else {
                 //     None
                 // }
-            }).collect::<Vec<_>>();
+            }).peekable();
 
-            digits.first().unwrap() * 10 + digits.last().unwrap()
+            digits.peek().unwrap() * 10 + digits.last().unwrap()
         })
         .sum::<i32>()
 }
