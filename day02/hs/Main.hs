@@ -16,7 +16,7 @@ isWithinLimit (CubeSet a b c) =
   in a <= x && b <= y && c <= z
 
 instance Semigroup CubeSet where
-  (CubeSet n i j) <> (CubeSet x y z) = CubeSet (n+x) (i+y) (j+z)
+  (CubeSet a b c) <> (CubeSet x y z) = CubeSet (a+x) (b+y) (c+z)
 
 instance Monoid CubeSet where
   mempty = CubeSet 0 0 0
@@ -25,8 +25,8 @@ cubesAvailable :: CubeSet
 cubesAvailable = CubeSet 12 13 14
 
 maxCubeSets :: CubeSet -> CubeSet -> CubeSet
-maxCubeSets (CubeSet n i j) (CubeSet x y z) =
-  CubeSet (max n x) (max i y) (max j z)
+maxCubeSets (CubeSet a b c) (CubeSet x y z) =
+  CubeSet (max a x) (max b y) (max c z)
 
 main = do
   ls <- lines <$> readFile "input"
