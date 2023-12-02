@@ -2,11 +2,18 @@
 
 import           Data.Function
 import           Data.Functor
-import qualified Data.Text      as T
-import           Debug.Trace    (trace)
+import qualified Data.Text     as T
 
 data CubeSet = CubeSet !Int !Int !Int
   deriving (Show, Eq, Bounded)
+
+getPower :: CubeSet -> Int
+getPower (CubeSet a b c) = a*b*c
+
+isWithinLimit :: CubeSet -> Bool
+isWithinLimit (CubeSet a b c) =
+  let CubeSet x y z = cubesAvailable
+  in a <= x && b <= y && c <= z
 
 instance Semigroup CubeSet where
   (CubeSet n i j) <> (CubeSet x y z) = CubeSet (n+x) (i+y) (j+z)
@@ -16,9 +23,6 @@ instance Monoid CubeSet where
 
 cubesAvailable :: CubeSet
 cubesAvailable = CubeSet 12 13 14
-
-getPower :: CubeSet -> Int
-getPower (CubeSet a b c) = a*b*c
 
 maxCubeSets :: CubeSet -> CubeSet -> CubeSet
 maxCubeSets (CubeSet n i j) (CubeSet x y z) =
@@ -33,7 +37,10 @@ main = do
   print $ solve2 games
 
 solve1 :: [[CubeSet]] -> Int
-solve1 cubes = sum . map fst . filter (\(i, s) -> isWithinLimit s) $ zip [1..] sets
+solve1 cubes = zip [1..] sets
+             & filter (isWithinLimit . snd)
+             & map fst
+             & sum
   where
     sets = map (foldl maxCubeSets mempty) cubes
 
@@ -41,12 +48,6 @@ solve2 :: [[CubeSet]] -> Int
 solve2 cubes = sum $ map getPower sets
   where
     sets = map (foldl maxCubeSets mempty) cubes
-
-isWithinLimit :: CubeSet -> Bool
-isWithinLimit (CubeSet a b c) =
-  a <= x && b <= y && c <= z
-  where
-    CubeSet x y z = cubesAvailable
 
 parse :: String -> [CubeSet]
 parse line = parseDraw . T.strip <$> T.splitOn (T.pack ";") usefulContent
