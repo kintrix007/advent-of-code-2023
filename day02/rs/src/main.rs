@@ -18,6 +18,7 @@ fn main() {
     let lines: Vec<_> = cont.lines().collect();
     let games = parse_games(&lines);
     println!("Part 1: {}", solve1(&games));
+    println!("Part 2: {}", solve2(&games));
 }
 
 fn solve1(games: &Vec<Vec<CubeSet>>) -> usize {
@@ -28,6 +29,18 @@ fn solve1(games: &Vec<Vec<CubeSet>>) -> usize {
         .filter(|(_, x)| is_valid(x))
         .map(|(i, _)| i + 1)
         .sum()
+}
+
+fn solve2(games: &Vec<Vec<CubeSet>>) -> u32 {
+    games
+        .iter()
+        .map(|x| get_max_cubes(x))
+        .map(|x| get_power(x))
+        .sum()
+}
+
+fn get_power(cube_set: CubeSet) -> u32 {
+    cube_set.red * cube_set.blue * cube_set.green
 }
 
 fn is_valid(cube_set: &CubeSet) -> bool {
