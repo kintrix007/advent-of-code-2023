@@ -17,6 +17,9 @@ instance Monoid CubeSet where
 cubesAvailable :: CubeSet
 cubesAvailable = CubeSet 12 13 14
 
+getPower :: CubeSet -> Int
+getPower (CubeSet a b c) = a*b*c
+
 maxCubeSets :: CubeSet -> CubeSet -> CubeSet
 maxCubeSets (CubeSet n i j) (CubeSet x y z) =
   CubeSet (max n x) (max i y) (max j z)
@@ -26,9 +29,16 @@ main = do
   let games = map parse ls
   putStr "Part 1: "
   print $ solve1 games
+  putStr "Part 2: "
+  print $ solve2 games
 
 solve1 :: [[CubeSet]] -> Int
 solve1 cubes = sum . map fst . filter (\(i, s) -> isWithinLimit s) $ zip [1..] sets
+  where
+    sets = map (foldl maxCubeSets mempty) cubes
+
+solve2 :: [[CubeSet]] -> Int
+solve2 cubes = sum $ map getPower sets
   where
     sets = map (foldl maxCubeSets mempty) cubes
 
