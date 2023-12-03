@@ -2,7 +2,6 @@
 import           Control.Exception (assert)
 import           Data.Char         (isDigit, isSymbol)
 import           Data.Function     ((&))
-import           Debug.Trace       (trace)
 
 data Pos = Pos !Int !Int deriving (Eq, Show)
 
@@ -34,14 +33,23 @@ main = do
 
   putStr "Part 1: "
   print $ part1 schematic
-  -- putStr "Part 2: "
-  -- print $ solve2 _
+  putStr "Part 2: "
+  print $ part2 schematic
 
 part1 :: Schematic -> Int
-part1 (Schematic ss ns) = sum $ map (\(Number _ _ n) -> n) a
+part1 (Schematic ss ns) = sum $ map (\(Number _ _ n) -> n) numbers
   where
-    a = ns
-      & filter (\(Number pos w n) -> any (\(Symbol p _) -> aabb p pos w) ss)
+    numbers = ns
+            & filter (\(Number pos w n) -> any (\(Symbol p _) -> aabb p pos w) ss)
+
+part2 :: Schematic -> Int
+part2 (Schematic ss ns) = foo
+  where
+    foo = filter (\(Symbol _ c) -> c == '*') ss
+        & map (\(Symbol p _) -> filter (\(Number pos w n) -> aabb p pos w) ns)
+        & filter (\xs -> length xs == 2)
+        & map (product . map (\(Number _ _ n) -> n))
+        & sum
 
 aabb :: Pos -> Pos -> Int -> Bool
 aabb (Pos cx cy) (Pos nx ny) nw =
