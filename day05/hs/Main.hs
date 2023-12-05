@@ -14,14 +14,21 @@ main = do
 
   putStr "Part 1: "
   print $ part1 seeds mappings
-  -- putStr "Part 2: "
-  -- print $ solve2 _
+  putStr "Part 2: "
+  print $ part2 seeds mappings
 
 part1 :: [Id] -> [Mapping] -> Int
 part1 ids [] = minimum ids
 part1 ids (mapping:xs) =
   let ids' = resolveMapping mapping <$> ids
   in part1 ids' xs
+
+part2 :: [Id] -> [Mapping] -> Int
+part2 ids = part1 (foo ids)
+  where
+    foo [] = []
+    foo (from:count:rest) = [from..from+count-1] ++ foo rest
+    foo _ = error "Invalid input format"
 
 resolveMapping :: Mapping -> Id -> Id
 resolveMapping [] n = n
