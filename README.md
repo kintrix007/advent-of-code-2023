@@ -21,10 +21,10 @@ solutions in hopes of it giving me a more in-depth understanding of them.
 ## Language Choice Per Day
 
 - Day 01: Haskell, Rust
-- Day 02: Haskell
-- Day 03: -
-- Day 04: -
-- Day 05: -
+- Day 02: Haskell, Rust
+- Day 03: Haskell
+- Day 04: Rust
+- Day 05: Haskell (Part 2 takes 10 minutes... Oh well)
 - Day 06: -
 - Day 07: -
 - Day 08: -
