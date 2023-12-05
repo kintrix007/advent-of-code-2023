@@ -9,8 +9,10 @@ pkgs.mkShell {
     # (haskell-language-server.override {
     #   supportedGhcVersions = [ "8107" ];
     # })
-    ghc
-    haskell-language-server
+    haskell.compiler.ghc948
+    (haskell-language-server.override {
+      supportedGhcVersions = [ "948" ];
+    })
     haskellPackages.stack
   ];
 }
