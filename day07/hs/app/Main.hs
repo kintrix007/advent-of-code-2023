@@ -1,6 +1,6 @@
 import           Data.Char     (isDigit)
-import           Data.Function
-import           Data.List
+import           Data.Function (on)
+import           Data.List     (nub, partition, sort, sortOn)
 
 data Kind
   = HighCard
@@ -31,9 +31,8 @@ getKind (Hand h) =
     5 -> FiveOfAKind
     _ -> error "Invalid hand"
   where
-    counts = nonJoker & map (\c -> nonJoker & filter (== c) & length)
-    isFullHouse = nub (sort counts) == [2,3]
-      || nub (sort counts) == [2] && j == 1
+    counts = map (\c -> length $ filter (== c) nonJoker) nonJoker
+    isFullHouse = nub (sort counts) == [2,3] || all (== 2) counts && j == 1
     isTwoPairs = length (filter (== 2) counts) == 4
     (nonJoker, jokerCards) = partition (/= 1) h
     j = length jokerCards
