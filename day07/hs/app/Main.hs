@@ -23,7 +23,7 @@ instance Ord Hand where
 
 getKind :: Hand -> Kind
 getKind (Hand h) =
-  case maximum counts of
+  case maximum (0:counts) + j of
     1 -> HighCard
     2 -> if isTwoPairs then TwoPairs else OnePair
     3 -> if isFullHouse then FullHouse else ThreeOfAKind
@@ -31,19 +31,24 @@ getKind (Hand h) =
     5 -> FiveOfAKind
     _ -> error "Invalid hand"
   where
-    counts = h & map (\c -> h & filter (== c) & length)
-    isFullHouse = sort counts == [2,2,3,3,3]
-    isTwoPairs = sort counts == [1,2,2,2,2]
+    counts = nonJoker & map (\c -> nonJoker & filter (== c) & length)
+    isFullHouse = nub (sort counts) == [2,3]
+      || nub (sort counts) == [2] && j == 1
+    isTwoPairs = length (filter (== 2) counts) == 4
+    (nonJoker, jokerCards) = partition (/= 1) h
+    j = length jokerCards
+
 
 main = do
   cont <- lines <$> readFile "input"
   let games = map parse cont
 
-  putStr "Part 1: "
-  print $ part1 games
+  -- putStrLn $ unlines $ map show $ zip (map fst games) (map (getKind . fst) games)
+  putStr "Part 2: "
+  print $ solve games
 
-part1 :: [(Hand, Int)] -> Int
-part1 games = sum $ zipWith (\i (_, b) -> i * b) [1..] ordered
+solve :: [(Hand, Int)] -> Int
+solve games = sum $ zipWith (\i (_, b) -> i * b) [1..] ordered
   where
     ordered = sortOn fst games
 
@@ -53,9 +58,9 @@ parse line =
   in (Hand $ map parseCard cardsTmp, read bidTmp)
 
 parseCard :: Char -> Card
+parseCard 'J' = 1
 parseCard ch | isDigit ch = read [ch]
 parseCard 'T' = 10
-parseCard 'J' = 11
 parseCard 'Q' = 12
 parseCard 'K' = 13
 parseCard 'A' = 14
