@@ -1,31 +1,34 @@
-import           Data.Function
-import           Data.List
-import           Data.List.Split
+import           Data.Function   ((&))
+import           Data.List       (isSuffixOf)
+import           Data.List.Split (splitOn)
+import qualified Data.Map        as M
 
-type Node = (String, (String, String))
+type Nodes = M.Map String (String, String)
 type Turn = (String, String) -> String
 
 main = do
   cont <-  readFile "input"
   let (turns, nodes) = parse cont
 
-  putStr "Part 1: "
+  putStr "Part 2: "
   print $ solve turns nodes
 
-solve :: [Turn] -> [Node] -> Int
+solve :: [Turn] -> Nodes -> Int
 solve turns nodes =
-  length $ takeWhile (\(n, _) -> n /= "ZZZ") $ scanl (step nodes) start (cycle turns)
+  foldl lcm 1 $ map stepsNeeded startDirs
   where
-    Just startDirs = lookup "AAA" nodes
-    start = ("AAA", startDirs) :: Node
+    startDirs = filter (\(n, _) -> "A" `isSuffixOf` n) $ M.toList nodes
+    stepsNeeded start = scanl (step nodes) start (cycle turns)
+      & takeWhile (\(n, _) -> not $ "Z" `isSuffixOf` n)
+      & length
 
-step :: [Node] -> Node -> Turn -> Node
+step :: Nodes -> (String, (String, String)) -> Turn -> (String, (String, String))
 step nodes (_, dirs) turn = (turn dirs, dirs')
   where
-    Just dirs' = lookup (turn dirs) nodes
+    Just dirs' = M.lookup (turn dirs) nodes
 
-parse :: String -> ([Turn], [Node])
-parse s = (map parseDir dirsTmp, map parseNode $ lines nodesTmp)
+parse :: String -> ([Turn], Nodes)
+parse s = (map parseDir dirsTmp, M.fromList $ map parseNode $ lines nodesTmp)
   where
     [dirsTmp, nodesTmp] = splitOn "\n\n" s
 
@@ -34,7 +37,7 @@ parseDir 'L' = fst
 parseDir 'R' = snd
 parseDir _   = error "Invalid direction"
 
-parseNode :: String -> Node
+parseNode :: String -> (String, (String, String))
 parseNode s = (name, (l, r))
   where
     [name, destsTmp] = splitOn " = " s
